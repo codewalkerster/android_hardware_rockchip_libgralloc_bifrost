@@ -152,6 +152,9 @@ private:
 	int open_and_query_ion();
 };
 
+/* 原始定义在 drivers/staging/android/uapi/ion.h 中, 这里的定义必须保持一致. */
+#define ION_FLAG_DMA32 4
+
 static void set_ion_flags(enum ion_heap_type heap_type, uint64_t usage,
                           unsigned int *priv_heap_flag, unsigned int *ion_flags)
 {
@@ -175,6 +178,11 @@ static void set_ion_flags(enum ion_heap_type heap_type, uint64_t usage,
 			{
 				*ion_flags = ION_FLAG_CACHED | ION_FLAG_CACHED_NEEDS_SYNC;
 			}
+		}
+
+		if ((usage & RK_GRALLOC_USAGE_WITHIN_4G) == RK_GRALLOC_USAGE_WITHIN_4G)
+		{
+			*ion_flags |= ION_FLAG_DMA32;
 		}
 	}
 }
