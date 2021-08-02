@@ -1683,13 +1683,6 @@ static bool should_sf_client_layer_use_afbc_format_by_size(const uint64_t base_f
         }
         // 至此, base_format 都是 MALI_GRALLOC_FORMAT_INTERNAL_RGBA_8888
 
-	/* 若外部 "有" '通过属性要求 对 sf_client_layer "不" 使用 AFBC 格式', 则... */
-        if ( is_no_afbc_for_sf_client_layer_required_via_prop() )
-        {
-                /* 将 "不" 使用 AFBC .*/
-                return false;
-        }
-
 	/* 若有 属性要求 禁用 use_non_afbc_for_small_buffers , 则... */
 	if ( is_not_to_use_non_afbc_for_small_buffers_required_via_prop() )
 	{
@@ -1870,11 +1863,15 @@ static uint64_t rk_gralloc_select_format(const uint64_t req_format,
 
 		return internal_format;
 	}
-	/* 否则, 即 当前 buffer 用于 sf_client_layer, 则... */
+	/* 否则, 即 当前 buffer 用于 sf_client_layer 等其他用途, 则... */
 	else
 	{
-                /* 若 client "没有" 在 'usage' 显式要求 "不" 使用 AFBC, 则 ... */
-                if ( 0 == (usage & MALI_GRALLOC_USAGE_NO_AFBC) )
+                /* 若 client "没有" 在 'usage' 显式要求 "不" 使用 AFBC,
+		 *	且 外部 "没有" '通过属性要求 对 sf_client_layer "不" 使用 AFBC 格式',
+		 * 则 将尝试使用 AFBC 格式, ...
+		 */
+                if ( 0 == (usage & MALI_GRALLOC_USAGE_NO_AFBC)
+			&& !(is_no_afbc_for_sf_client_layer_required_via_prop() ) )
                 {
                         /* 若当前 platform 是 356x, 则... */
                         if ( RK356X == get_rk_board_platform() )
