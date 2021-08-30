@@ -136,6 +136,7 @@ void allocate(const buffer_descriptor_t &bufferDescriptor, uint32_t count, IAllo
 				"internal_format : 0x%" PRIx64 ", stride : %d, byte_stride : %d, "
 				"internalWidth : %d, internalHeight : %d, "
 				"alloc_format : 0x%" PRIx64 ", size : %d, layer_count : %u, backing_store_size : %d, "
+				"backing_store_id : %" PRIu64 ", "
 				"allocating_pid : %d, ref_count : %d, yuv_info : %d",
 				hnd, (bufDescriptor->name).c_str() == nullptr ? "unset" : (bufDescriptor->name).c_str(),
 			  hnd->share_fd, hnd->share_attr_fd,
@@ -144,6 +145,7 @@ void allocate(const buffer_descriptor_t &bufferDescriptor, uint32_t count, IAllo
 			  hnd->internal_format, hnd->stride, hnd->byte_stride,
 			  hnd->internalWidth, hnd->internalHeight,
 			  hnd->alloc_format, hnd->size, hnd->layer_count, hnd->backing_store_size,
+			  hnd->backing_store_id,
 			  hnd->allocating_pid, hnd->ref_count, hnd->yuv_info);
 			ALOGD("plane_info[0]: offset : %u, byte_stride : %u, alloc_width : %u, alloc_height : %u",
 					(hnd->plane_info)[0].offset,
